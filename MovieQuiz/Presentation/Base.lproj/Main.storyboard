@@ -25,7 +25,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="VOb-pt-Cv2">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="VOb-pt-Cv2">
                                 <rect key="frame" x="20" y="69" width="390" height="829"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mrf-Bf-yye">
@@ -47,17 +47,17 @@
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Hb2-yi-b6X" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="29.666666666666686" width="390" height="585"/>
+                                        <rect key="frame" x="0.0" y="43.666666666666686" width="390" height="585"/>
                                         <color key="tintColor" name="YP White (iOS)"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Hb2-yi-b6X" secondAttribute="height" multiplier="2:3" id="7YK-xk-EcK"/>
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1oQ-Bj-CET">
-                                        <rect key="frame" x="0.0" y="620.66666666666663" width="390" height="142.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="648.66666666666663" width="390" height="100.33333333333337"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bGO-d9-NHR" userLabel="Question Label">
-                                                <rect key="frame" x="42" y="12.999999999999993" width="306" height="116.33333333333331"/>
+                                                <rect key="frame" x="42" y="0.0" width="306" height="100.33333333333333"/>
                                                 <color key="tintColor" name="YP White (iOS)"/>
                                                 <string key="text">Рейтинг этого фильма
 меньше чем 5?</string>
@@ -70,8 +70,8 @@
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="bGO-d9-NHR" secondAttribute="trailing" constant="42" id="5oR-Ym-IsW"/>
                                             <constraint firstItem="bGO-d9-NHR" firstAttribute="leading" secondItem="1oQ-Bj-CET" secondAttribute="leading" constant="42" id="Arv-Ma-rco"/>
-                                            <constraint firstItem="bGO-d9-NHR" firstAttribute="top" secondItem="1oQ-Bj-CET" secondAttribute="top" constant="13" id="NUo-Wn-BqP"/>
-                                            <constraint firstAttribute="bottom" secondItem="bGO-d9-NHR" secondAttribute="bottom" constant="13" id="Xt5-ac-lXc"/>
+                                            <constraint firstItem="bGO-d9-NHR" firstAttribute="top" secondItem="1oQ-Bj-CET" secondAttribute="top" id="NUo-Wn-BqP"/>
+                                            <constraint firstAttribute="bottom" secondItem="bGO-d9-NHR" secondAttribute="bottom" id="Xt5-ac-lXc"/>
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="IoR-kH-kkX">
