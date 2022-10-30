@@ -94,7 +94,9 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         // через секунду показываем следующий вопрос и разрешаем работу кнопок
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            
             self.showNextQuestionOrResults()
             self.yesButton.isEnabled = true
             self.noButton.isEnabled = true
@@ -131,7 +133,9 @@ final class MovieQuizViewController: UIViewController {
             message: result.text,
             preferredStyle: .alert)
         
-        let action = UIAlertAction(title: result.buttonText, style: .default) { _ in
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
