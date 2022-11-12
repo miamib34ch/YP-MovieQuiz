@@ -5,7 +5,6 @@
 //  Created by Богдан Полыгалов on 07.11.2022.
 //
 
-import Foundation
 import UIKit
 
 struct AlertPresenter: AlertPresenterProtocol{
