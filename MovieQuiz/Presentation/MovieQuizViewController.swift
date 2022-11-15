@@ -16,15 +16,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10 //лимит вопросов в игре
     private var currentQuestion: QuizQuestion? //текущий вопрос
     
-    private var statisticMessage: String = ""
-    
     private var questionFactory: QuestionFactoryProtocol? //"какая-то" фабрика вопросов, которая соответствует протоколу
     private var alertPresenter: AlertPresenterProtocol? //"какой-то" вызыватель алертов, который соответствует протоколу
     private var statisticService: StatisticService? //"какая-то" статистика, которая соответствует протоколу
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // подтягиваем наши рекорды
+        // подтягиваем сервис статистики
         statisticService = StatisticServiceImplementation()
         
         // настройка внешнего вида
@@ -105,21 +103,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func show(quiz result: QuizResultsViewModel) {
         
-        //создаём сообщение со статистикой
+        var finalMessage = result.text //итоговый текст алерта
+        
+        //добавлением статистику
         if let statisticService = statisticService {
             let count = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-            let record = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) \(statisticService.bestGame.date)"
+            
+            let record = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date))"
+            
             let accuracy = "Средняя точность \(String(format: "%.2f", statisticService.totalAccuracy/Double(statisticService.gamesCount)*100))%"
-            statisticMessage = count + "\n" + record + "\n" + accuracy
-        }
-        else {
-        }
-        
-        var finalMessage = result.text
-        
-        if statisticMessage != "" {
-            finalMessage += "\n"
-            finalMessage += statisticMessage
+            
+            finalMessage += "\n" + count + "\n" + record + "\n" + accuracy
         }
         
         //создаём модель с данными прошедшой игры

@@ -12,9 +12,9 @@ final class StatisticServiceImplementation: StatisticService {
     private let userDefaults = UserDefaults.standard //хранилище данных
     
     private enum Keys: String { //ключи для хранилища
-        case totalAccuracy, //cредняя точность
-             bestGame, //лучшая игра
-             gamesCount // общее количество игр
+        case totalAccuracy, //cредняя точность (сумма всех результатов в виде - правильныеОтветы/общееКоличествоСыгранныхВопросов)
+             bestGame, //лучшая игра: результат и дата
+             gamesCount //общее количество игр
     }
     
     var bestGame: GameRecord{
