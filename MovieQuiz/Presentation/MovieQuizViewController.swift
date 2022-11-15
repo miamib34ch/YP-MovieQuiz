@@ -16,11 +16,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10 //лимит вопросов в игре
     private var currentQuestion: QuizQuestion? //текущий вопрос
     
+    private var statisticMessage: String = ""
+    
     private var questionFactory: QuestionFactoryProtocol? //"какая-то" фабрика вопросов, которая соответствует протоколу
-    private var alertPresenter: AlertPresenterProtocol? //"какой-то" класс показывающий алерт, который соответствует протоколу
+    private var alertPresenter: AlertPresenterProtocol? //"какой-то" вызыватель алертов, который соответствует протоколу
+    private var statisticService: StatisticService? //"какая-то" статистика, которая соответствует протоколу
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // подтягиваем наши рекорды
+        statisticService = StatisticServiceImplementation()
         
         // настройка внешнего вида
         imageView.layer.masksToBounds = true // включаем маску, которая изменяется для создания эффектов границ и углов
@@ -80,8 +85,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         if currentQuestionIndex == questionsAmount - 1 {
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
-                text: "Ваш результат: \(correctAnswers) из 10",
+                text: "Ваш результат: \(correctAnswers) из \(questionsAmount)",
                 buttonText: "Сыграть ещё раз")
+            statisticService?.store(correct: correctAnswers, total: questionsAmount) //сохраняем статистику
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
@@ -98,8 +104,28 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func show(quiz result: QuizResultsViewModel) {
+        
+        //создаём сообщение со статистикой
+        if let statisticService = statisticService {
+            let count = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+            let record = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) \(statisticService.bestGame.date)"
+            let accuracy = "Средняя точность \(String(format: "%.2f", statisticService.totalAccuracy))%"
+            statisticMessage = count + "\n" + record + "\n" + accuracy
+        }
+        else {
+        }
+        
+        var finalMessage = result.text
+        
+        if statisticMessage != "" {
+            finalMessage += "\n"
+            finalMessage += statisticMessage
+        }
+        
         //создаём модель с данными прошедшой игры
-        let model = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText){[weak self] in
+        let model = AlertModel(title: result.title,
+                               message: finalMessage,
+                               buttonText: result.buttonText){[weak self] in
             guard let self = self else {return}
             
             self.currentQuestionIndex = 0
