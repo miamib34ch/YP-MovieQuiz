@@ -59,10 +59,13 @@ final class StatisticServiceImplementation: StatisticService {
     
     func store(correct count: Int, total amount: Int) {
         gamesCount += 1
+        
         let newGame: GameRecord = GameRecord(correct: count, total: amount, date: Date().dateTimeString)
         if bestGame < newGame {
             bestGame = newGame
         }
-        totalAccuracy += Double(count)/Double(amount)
+        
+        //чтобы высчитать мы берём прошлое значение, умножаем на количество игр, которое было для этого-прошлого значения, так мы получаем общую сумму соотношений прошлых игр; затем добавляем соотношение новой игры и делим уже на текущие значение соотношений(количество сыгранных игр)
+        totalAccuracy = (totalAccuracy*Double(gamesCount-1)+Double(count)/Double(amount))/Double(gamesCount)
     }
 }

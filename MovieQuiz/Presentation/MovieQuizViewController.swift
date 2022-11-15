@@ -111,7 +111,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
             let record = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date))"
             
-            let accuracy = "Средняя точность \(String(format: "%.2f", statisticService.totalAccuracy/Double(statisticService.gamesCount)*100))%"
+            let accuracy = "Средняя точность \(String(format: "%.2f", statisticService.totalAccuracy*100))%"
             
             finalMessage += "\n" + count + "\n" + record + "\n" + accuracy
         }
