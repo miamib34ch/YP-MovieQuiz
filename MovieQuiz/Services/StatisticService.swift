@@ -45,7 +45,7 @@ final class StatisticServiceImplementation: StatisticService {
         get{
             let corrects = userDefaults.integer(forKey: Keys.corrects.rawValue)
             let totals = userDefaults.integer(forKey: Keys.totals.rawValue)
-            return Double(corrects)/Double(totals)
+            return Double(corrects) / Double(totals)
         }
     }
     
