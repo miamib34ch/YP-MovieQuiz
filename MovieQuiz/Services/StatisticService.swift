@@ -22,7 +22,7 @@ final class StatisticServiceImplementation: StatisticService {
         case gamesCount
     }
     
-    var bestGame: GameRecord{
+    private(set) var bestGame: GameRecord{
         get{
             guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
                 let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
@@ -49,7 +49,7 @@ final class StatisticServiceImplementation: StatisticService {
         }
     }
     
-    var gamesCount: Int {
+    private(set) var gamesCount: Int {
         get{
             return userDefaults.integer(forKey: Keys.gamesCount.rawValue)
         }
