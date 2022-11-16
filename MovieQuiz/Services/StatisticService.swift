@@ -12,8 +12,10 @@ final class StatisticServiceImplementation: StatisticService {
     private let userDefaults = UserDefaults.standard //хранилище данных
     
     private enum Keys: String { //ключи для хранилища
-        /// cредняя точность (сумма всех результатов в виде - правильныеОтветы/общееКоличествоСыгранныхВопросов)
-        case totalAccuracy 
+        /// количество сыгранных вопросов за всё время
+        case totals
+        /// количество правильных ответов за всё время
+        case corrects
         /// лучшая игра: результат и дата
         case bestGame 
          /// общее количество игр
@@ -41,10 +43,9 @@ final class StatisticServiceImplementation: StatisticService {
     
     var totalAccuracy: Double {
         get{
-            return userDefaults.double(forKey: Keys.totalAccuracy.rawValue)
-        }
-        set{
-            userDefaults.set(newValue, forKey: Keys.totalAccuracy.rawValue)
+            let corrects = userDefaults.integer(forKey: Keys.corrects.rawValue)
+            let totals = userDefaults.integer(forKey: Keys.totals.rawValue)
+            return Double(corrects)/Double(totals)
         }
     }
     
@@ -60,12 +61,21 @@ final class StatisticServiceImplementation: StatisticService {
     func store(correct count: Int, total amount: Int) {
         gamesCount += 1
         
+        //сохраняем рекорд если побили
         let newGame: GameRecord = GameRecord(correct: count, total: amount, date: Date().dateTimeString)
         if bestGame < newGame {
             bestGame = newGame
         }
         
-        //чтобы высчитать мы берём прошлое значение, умножаем на количество игр, которое было для этого-прошлого значения, так мы получаем общую сумму соотношений прошлых игр; затем добавляем соотношение новой игры и делим уже на текущие значение соотношений(количество сыгранных игр)
-        totalAccuracy = (totalAccuracy*Double(gamesCount-1)+Double(count)/Double(amount))/Double(gamesCount)
+        //сохраняем количество правильных ответов за всё время
+        var corrects = userDefaults.integer(forKey: Keys.corrects.rawValue)
+        corrects += count
+        userDefaults.set(corrects, forKey: Keys.corrects.rawValue)
+        
+        //сохраняем количество сыгранных вопросов за всё время
+        var totals = userDefaults.integer(forKey: Keys.totals.rawValue)
+        totals += amount
+        userDefaults.set(totals, forKey: Keys.totals.rawValue)
+        
     }
 }
