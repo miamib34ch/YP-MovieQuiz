@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B0C640B292D3FD300B28949 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0C640A292D3FD300B28949 /* NetworkClient.swift */; };
 		8B325B4529183752004D47E8 /* QuestionFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B325B4429183752004D47E8 /* QuestionFactoryProtocol.swift */; };
 		8B3F9C0F2922218D0074B488 /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3F9C0E2922218D0074B488 /* StatisticService.swift */; };
 		8B3F9C112922235A0074B488 /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3F9C102922235A0074B488 /* GameRecord.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B0C640A292D3FD300B28949 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		8B325B4429183752004D47E8 /* QuestionFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactoryProtocol.swift; sourceTree = "<group>"; };
 		8B3F9C0E2922218D0074B488 /* StatisticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticService.swift; sourceTree = "<group>"; };
 		8B3F9C102922235A0074B488 /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				8BB3582029203A450081C8D4 /* AlertPresenterProtocol.swift */,
 				8B3F9C0E2922218D0074B488 /* StatisticService.swift */,
 				8B3F9C12292241E70074B488 /* StatisticServiceProtocol.swift */,
+				8B0C640A292D3FD300B28949 /* NetworkClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B0C640B292D3FD300B28949 /* NetworkClient.swift in Sources */,
 				8B3F9C13292241E70074B488 /* StatisticServiceProtocol.swift in Sources */,
 				AD5EE5DE284D7887003966EF /* UIColor+Extensions.swift in Sources */,
 				8B7B77C4291985A900AA7DBC /* AlertPresenter.swift in Sources */,
