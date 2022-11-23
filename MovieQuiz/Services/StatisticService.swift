@@ -8,7 +8,7 @@
 import Foundation
 
 final class StatisticServiceImplementation: StatisticService {
-
+    
     private let userDefaults = UserDefaults.standard //хранилище данных
     
     private enum Keys: String { //ключи для хранилища
@@ -17,15 +17,15 @@ final class StatisticServiceImplementation: StatisticService {
         /// количество правильных ответов за всё время
         case corrects
         /// лучшая игра: результат и дата
-        case bestGame 
-         /// общее количество игр
+        case bestGame
+        /// общее количество игр
         case gamesCount
     }
     
     private(set) var bestGame: GameRecord{
         get{
             guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
-                let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
+                  let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
                 return .init(correct: 0, total: 0, date: Date().dateTimeString)
             }
             
