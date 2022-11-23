@@ -13,7 +13,10 @@ class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading?
     private var movies: [MostPopularMovie] = []
     
-    /*private let questions: [QuizQuestion] = [
+    /*
+     нужно на следующий спринт
+     
+     private let questions: [QuizQuestion] = [
      QuizQuestion(
      image: "The Godfather",
      text: "Рейтинг этого фильма больше чем 6?",
@@ -64,11 +67,12 @@ class QuestionFactory: QuestionFactoryProtocol {
     
     func loadData() {
         moviesLoader?.loadMovies { result in
+            // сетевые запросы работают не в основном потоке, но так как данные уже получены, то переходим в основной
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 switch result {
                 case .success(let mostPopularMovies):
-                    self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
+                    self.movies = mostPopularMovies.items // сохраняем фильмы в нашу новую переменную
                     self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error) // сообщаем об ошибке нашему MovieQuizViewController
@@ -78,6 +82,9 @@ class QuestionFactory: QuestionFactoryProtocol {
     }
     
     func requestNextQuestion() {
+        // генерация следуещего вопроса
+        
+        // поскольку будем получать картинку через сетевой запрос, делаем это в другом потоке
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             let index = (0..<self.movies.count).randomElement() ?? 0
@@ -86,32 +93,30 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             var imageData = Data()
             
-            do {
+            do { //пытаемся получить картинку и создать следующий вопрос
                 imageData = try Data(contentsOf: movie.resizedImageURL)
-            } catch {
+                let rating = Float(movie.rating) ?? 0
+                
+                var correctAnswer = true //инициализация нужна, чтобы передать в функцию, значение будет изменено в следующей строчке
+                let text = self.randomText(rating: rating, correctAnswer: &correctAnswer)
+                
+                
+                let question = QuizQuestion(image: imageData,
+                                            text: text,
+                                            correctAnswer: correctAnswer)
+                
+                //возвращаемся в главный поток, сетевые данные уже получены, работа с ними окончена
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.didReceiveNextQuestion(question: question)
+                }
+            } catch {//если не получилось получить картинку, сообщаем об этом контроллеру
                 print("Failed to load image")
+                //возвращаемся в главный поток, сетевые данные не удалось получить, работа с ними окончена
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.didFailToLoadImage()
-                    return
                 }
-            }
-            
-            let rating = Float(movie.rating) ?? 0
-            
-            //let text = "Рейтинг этого фильма больше чем 7?"
-            //let correctAnswer = rating > 7
-            var correctAnswer = true
-            let text = self.randomText(rating: rating, correctAnswer: &correctAnswer)
-            
-            
-            let question = QuizQuestion(image: imageData,
-                                        text: text,
-                                        correctAnswer: correctAnswer)
-            
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.didReceiveNextQuestion(question: question)
             }
         }
     }

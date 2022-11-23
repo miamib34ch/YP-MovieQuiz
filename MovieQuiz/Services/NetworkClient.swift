@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Отвечает за загрузку данных по URL
+/// отвечает за загрузку данных по URL
 struct NetworkClient {
     
     private enum NetworkError: Error {
@@ -18,22 +18,22 @@ struct NetworkClient {
         let request = URLRequest(url: url)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            // Проверяем, пришла ли ошибка
+            // проверяем, пришла ли ошибка
             if let error = error {
-                handler(.failure(error)) //вызывается функция handler и в неё передаётся ассоциированный кейс перечисления Result
+                handler(.failure(error)) // вызывается функция handler и в неё передаётся ассоциированный кейс перечисления Result
                 return
             }
             
-            // Проверяем, что нам пришёл успешный код ответа
+            // проверяем, что нам пришёл успешный код ответа
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
                 handler(.failure(NetworkError.codeError))
                 return
             }
             
-            // Возвращаем данные
+            // возвращаем данные
             guard let data = data else { return }
-            handler(.success(data)) //вызывается функция handler и в неё передаётся ассоциированный кейс перечисления Result
+            handler(.success(data)) // вызывается функция handler и в неё передаётся ассоциированный кейс перечисления Result
         }
         
         task.resume()

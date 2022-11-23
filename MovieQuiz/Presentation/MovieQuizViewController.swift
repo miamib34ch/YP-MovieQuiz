@@ -12,14 +12,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     
-    private var currentQuestionIndex: Int = 0 //номер текущего вопроса
-    private var correctAnswers: Int = 0 //количество правильных ответов
-    private let questionsAmount: Int = 10 //лимит вопросов в игре
-    private var currentQuestion: QuizQuestion? //текущий вопрос
+    private var currentQuestionIndex: Int = 0 // номер текущего вопроса
+    private var correctAnswers: Int = 0 // количество правильных ответов
+    private let questionsAmount: Int = 10 // лимит вопросов в игре
+    private var currentQuestion: QuizQuestion? // текущий вопрос
     
-    private var questionFactory: QuestionFactoryProtocol? //"какая-то" фабрика вопросов, которая соответствует протоколу
-    private var alertPresenter: AlertPresenterProtocol? //"какой-то" вызыватель алертов, который соответствует протоколу
-    private var statisticService: StatisticService? //"какая-то" статистика, которая соответствует протоколу
+    private var questionFactory: QuestionFactoryProtocol? // "какая-то" фабрика вопросов, которая соответствует протоколу
+    private var alertPresenter: AlertPresenterProtocol? // "какой-то" вызыватель алертов, который соответствует протоколу
+    private var statisticService: StatisticService? // "какая-то" статистика, которая соответствует протоколу
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +36,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // делегируем показ алерта классу AlertPresenter
         alertPresenter = AlertPresenter(delegate: self)
         
+        // делаем кнопки недоступными, поскольку в начале данные загружаются
         self.yesButton.isEnabled = false
         self.noButton.isEnabled = false
         
@@ -68,13 +69,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNetworkDataError(message: String) {
         activityIndicator.isHidden = true // скрываем индикатор загрузки
         
-        //создаём модель алерта с ошибкой
+        // создаём модель алерта с ошибкой
         let model = AlertModel(title: "Ошибка",
                                message: message,
                                buttonText: "Попробовать ещё раз"){[weak self] in
             guard let self = self else { return }
             
-            //показываем индикатор
+            // показываем индикатор
             self.showLoadingIndicator()
             // начинаем загрузку данных заново
             self.questionFactory?.loadData()
@@ -86,13 +87,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNetworkImageError(message: String) {
         activityIndicator.isHidden = true // скрываем индикатор загрузки
         
-        //создаём модель алерта с ошибкой
+        // создаём модель алерта с ошибкой
         let model = AlertModel(title: "Ошибка",
                                message: message,
                                buttonText: "Попробовать ещё раз"){[weak self] in
             guard let self = self else { return }
             
-            //показываем индикатор
+            // показываем индикатор
             self.showLoadingIndicator()
             // начинаем загрузку картинки заново
             self.questionFactory?.requestNextQuestion()
@@ -102,7 +103,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
-        //подсчёт очков
+        // подсчёт очков
         if isCorrect {
             correctAnswers += 1
         }
@@ -129,11 +130,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 title: "Этот раунд окончен!",
                 text: "Ваш результат: \(correctAnswers) из \(questionsAmount)",
                 buttonText: "Сыграть ещё раз")
-            statisticService?.store(correct: correctAnswers, total: questionsAmount) //сохраняем статистику
+            statisticService?.store(correct: correctAnswers, total: questionsAmount) // сохраняем статистику
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
-            showLoadingIndicator() //показываем индикатор загрузки поскольку картинки грузятся
+            showLoadingIndicator() // показываем индикатор загрузки поскольку картинки грузятся
             questionFactory?.requestNextQuestion()
         }
     }
@@ -148,9 +149,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func show(quiz result: QuizResultsViewModel) {
         
-        var finalMessage = result.text //итоговый текст алерта
+        var finalMessage = result.text // итоговый текст алерта
         
-        //добавлением статистику
+        // добавлением статистику
         if let statisticService = statisticService {
             let count = "Количество сыгранных квизов: \(statisticService.gamesCount)"
             
@@ -161,7 +162,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             finalMessage += "\n" + count + "\n" + record + "\n" + accuracy
         }
         
-        //создаём модель с данными прошедшой игры
+        // создаём модель с данными прошедшой игры
         let model = AlertModel(title: result.title,
                                message: finalMessage,
                                buttonText: result.buttonText){[weak self] in
@@ -194,9 +195,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {return}
             self.activityIndicator.isHidden = true // скрываем индикатор загрузки
-            self.yesButton.isEnabled = true
+            self.yesButton.isEnabled = true // делаем кнопки доступными
             self.noButton.isEnabled = true
-            self.show(quiz: viewModel)
+            self.show(quiz: viewModel) // показываем вопрос
         }
     }
     
@@ -209,6 +210,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didFailToLoadImage() {
-        showNetworkImageError(message: "Не удаётся загрузить картинку") // возьмём в качестве сообщения описание ошибки
+        showNetworkImageError(message: "Не удаётся загрузить картинку")
     }
 }

@@ -9,9 +9,9 @@ import Foundation
 
 final class StatisticServiceImplementation: StatisticService {
     
-    private let userDefaults = UserDefaults.standard //хранилище данных
+    private let userDefaults = UserDefaults.standard // хранилище данных
     
-    private enum Keys: String { //ключи для хранилища
+    private enum Keys: String { // ключи для хранилища
         /// количество сыгранных вопросов за всё время
         case totals
         /// количество правильных ответов за всё время
@@ -61,18 +61,18 @@ final class StatisticServiceImplementation: StatisticService {
     func store(correct count: Int, total amount: Int) {
         gamesCount += 1
         
-        //сохраняем рекорд если побили
+        // сохраняем рекорд если побили
         let newGame: GameRecord = GameRecord(correct: count, total: amount, date: Date().dateTimeString)
         if bestGame < newGame {
             bestGame = newGame
         }
         
-        //сохраняем количество правильных ответов за всё время
+        // сохраняем количество правильных ответов за всё время
         var corrects = userDefaults.integer(forKey: Keys.corrects.rawValue)
         corrects += count
         userDefaults.set(corrects, forKey: Keys.corrects.rawValue)
         
-        //сохраняем количество сыгранных вопросов за всё время
+        // сохраняем количество сыгранных вопросов за всё время
         var totals = userDefaults.integer(forKey: Keys.totals.rawValue)
         totals += amount
         userDefaults.set(totals, forKey: Keys.totals.rawValue)

@@ -49,7 +49,7 @@ struct MostPopularMovies: Codable {
 }
 
 struct MostPopularMovie: Codable {
-    //добавили только поля, которые нас интересуют
+    // добавили только поля, которые нас интересуют
     let title: String
     let rating: String
     let imageURL: URL

@@ -7,7 +7,7 @@
 
 import Foundation
 
-//Структура для хранения Mock-данных
+// структура для хранения Mock-данных
 struct QuizQuestion {
     let image: Data
     let text: String
