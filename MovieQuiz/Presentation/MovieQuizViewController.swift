@@ -5,20 +5,21 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // делает статус бар светлым (у нас всегда темный фон и поэтому внезависимости от темы афйона статус бар будет светлым)
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
     
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     
-    private var currentQuestionIndex: Int = 0 //номер текущего вопроса
-    private var correctAnswers: Int = 0 //количество правильных ответов
-    private let questionsAmount: Int = 10 //лимит вопросов в игре
-    private var currentQuestion: QuizQuestion? //текущий вопрос
+    private var currentQuestionIndex: Int = 0 // номер текущего вопроса
+    private var correctAnswers: Int = 0 // количество правильных ответов
+    private let questionsAmount: Int = 10 // лимит вопросов в игре
+    private var currentQuestion: QuizQuestion? // текущий вопрос
     
-    private var questionFactory: QuestionFactoryProtocol? //"какая-то" фабрика вопросов, которая соответствует протоколу
-    private var alertPresenter: AlertPresenterProtocol? //"какой-то" вызыватель алертов, который соответствует протоколу
-    private var statisticService: StatisticService? //"какая-то" статистика, которая соответствует протоколу
+    private var questionFactory: QuestionFactoryProtocol? // "какая-то" фабрика вопросов, которая соответствует протоколу
+    private var alertPresenter: AlertPresenterProtocol? // "какой-то" вызыватель алертов, который соответствует протоколу
+    private var statisticService: StatisticService? // "какая-то" статистика, которая соответствует протоколу
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +31,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         
         // делегируем создание вопросов классу QuestionFactory
-        questionFactory = QuestionFactory(delegate: self)
+        questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         
         // делегируем показ алерта классу AlertPresenter
         alertPresenter = AlertPresenter(delegate: self)
         
-        // показываем первый вопрос
-        questionFactory?.requestNextQuestion()
+        // делаем кнопки недоступными, поскольку в начале данные загружаются
+        self.yesButton.isEnabled = false
+        self.noButton.isEnabled = false
+        
+        // начинаем загрузку данных и показываем индикатор
+        questionFactory?.loadData()
+        showLoadingIndicator()
     }
     
     @IBAction private func yesButtonClicked() {
@@ -55,8 +61,49 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
+        activityIndicator.startAnimating() // включаем анимацию
+    }
+    
+    private func showNetworkDataError(message: String) {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        
+        // создаём модель алерта с ошибкой
+        let model = AlertModel(title: "Ошибка",
+                               message: message,
+                               buttonText: "Попробовать ещё раз"){[weak self] in
+            guard let self = self else { return }
+            
+            // показываем индикатор
+            self.showLoadingIndicator()
+            // начинаем загрузку данных заново
+            self.questionFactory?.loadData()
+        }
+        
+        alertPresenter?.show(model: model)
+    }
+    
+    private func showNetworkImageError(message: String) {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        
+        // создаём модель алерта с ошибкой
+        let model = AlertModel(title: "Ошибка",
+                               message: message,
+                               buttonText: "Попробовать ещё раз"){[weak self] in
+            guard let self = self else { return }
+            
+            // показываем индикатор
+            self.showLoadingIndicator()
+            // начинаем загрузку картинки заново
+            self.questionFactory?.requestNextQuestion()
+        }
+        
+        alertPresenter?.show(model: model)
+    }
+    
     private func showAnswerResult(isCorrect: Bool) {
-        //подсчёт очков
+        // подсчёт очков
         if isCorrect {
             correctAnswers += 1
         }
@@ -74,8 +121,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             guard let self = self else { return }
             
             self.showNextQuestionOrResults()
-            self.yesButton.isEnabled = true
-            self.noButton.isEnabled = true
         }
     }
     
@@ -85,11 +130,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 title: "Этот раунд окончен!",
                 text: "Ваш результат: \(correctAnswers) из \(questionsAmount)",
                 buttonText: "Сыграть ещё раз")
-            statisticService?.store(correct: correctAnswers, total: questionsAmount) //сохраняем статистику
+            statisticService?.store(correct: correctAnswers, total: questionsAmount) // сохраняем статистику
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
-            questionFactory?.requestNextQuestion() 
+            showLoadingIndicator() // показываем индикатор загрузки поскольку картинки грузятся
+            questionFactory?.requestNextQuestion()
         }
     }
     
@@ -103,9 +149,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func show(quiz result: QuizResultsViewModel) {
         
-        var finalMessage = result.text //итоговый текст алерта
+        var finalMessage = result.text // итоговый текст алерта
         
-        //добавлением статистику
+        // добавлением статистику
         if let statisticService = statisticService {
             let count = "Количество сыгранных квизов: \(statisticService.gamesCount)"
             
@@ -116,7 +162,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             finalMessage += "\n" + count + "\n" + record + "\n" + accuracy
         }
         
-        //создаём модель с данными прошедшой игры
+        // создаём модель с данными прошедшой игры
         let model = AlertModel(title: result.title,
                                message: finalMessage,
                                buttonText: result.buttonText){[weak self] in
@@ -134,7 +180,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(), // распаковываем картинку
+            image: UIImage(data: model.image) ?? UIImage(), // распаковываем картинку
             question: model.text, // берём текст вопроса
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)") // высчитываем номер вопроса
     }
@@ -148,7 +194,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {return}
-            self.show(quiz: viewModel)
+            self.activityIndicator.isHidden = true // скрываем индикатор загрузки
+            self.yesButton.isEnabled = true // делаем кнопки доступными
+            self.noButton.isEnabled = true
+            self.show(quiz: viewModel) // показываем вопрос
         }
+    }
+    
+    func didLoadDataFromServer() {
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkDataError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+    }
+    
+    func didFailToLoadImage() {
+        showNetworkImageError(message: "Не удаётся загрузить картинку")
     }
 }
