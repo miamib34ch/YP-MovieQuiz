@@ -27,6 +27,8 @@ struct AlertPresenter: AlertPresenterProtocol{
         
         alert.addAction(action)
         
+        alert.view.accessibilityIdentifier = "Alert" // добавляем алерту индентификатор, который нужен для UI тестов
+        
         guard let delegate = delegate else {return}
         
         delegate.present(alert, animated: true, completion: nil)
