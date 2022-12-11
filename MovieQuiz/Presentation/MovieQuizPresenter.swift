@@ -16,11 +16,11 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private var correctAnswers: Int = 0 // количество правильных ответов
     
     private var statisticService: StatisticService? // "какая-то" статистика, которая соответствует протоколу
-    private weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewControllerProtocol?
     
     var questionFactory: QuestionFactoryProtocol? // "какая-то" фабрика вопросов, которая соответствует протоколу
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         // подтягиваем сервис статистики
         statisticService = StatisticServiceImplementation()
@@ -44,7 +44,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         currentQuestionIndex += 1
     }
     
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
+    func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
             image: UIImage(data: model.image) ?? UIImage(), // распаковываем картинку
             question: model.text, // берём текст вопроса
