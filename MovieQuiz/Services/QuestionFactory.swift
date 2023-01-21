@@ -124,7 +124,7 @@ class QuestionFactory: QuestionFactoryProtocol {
     private func randomText(rating: Float, correctAnswer: inout Bool) -> String{
         let words = ["больше", "меньше"]
         if let word = words.randomElement(){
-            if let number = (1..<10).randomElement(){
+            if let number = (5..<10).randomElement(){
                 let text = "Рейтинг этого фильма \(word) чем \(number)?"
                 if word == "больше"{
                     correctAnswer = rating > Float(number)
