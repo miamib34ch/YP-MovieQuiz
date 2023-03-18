@@ -281,7 +281,6 @@
 			buildPhases = (
 				AD1ABAAA2831907B00B3E448 /* Sources */,
 				AD1ABAAB2831907B00B3E448 /* Frameworks */,
-				AD77F5722857EDD20062FB14 /* Run SwiftLint */,
 				AD1ABAAC2831907B00B3E448 /* Resources */,
 			);
 			buildRules = (
@@ -366,27 +365,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		AD77F5722857EDD20062FB14 /* Run SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run SwiftLint";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# if [ ! -f \"${PROJECT_DIR}/.bin/swiftlint\" ]; then\n#     echo \"error: SwiftLint not found\"\n#     exit 1 \n# fi\n\n# ${PROJECT_DIR}/.bin/swiftlint\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8B74B7272944D52700203EF6 /* Sources */ = {

@@ -43,7 +43,7 @@ struct MoviesLoader: MoviesLoading {
                     
                     // декодировали, но данные пустые, тогда ошибка
                     if mostPopularMovies.items.isEmpty{
-                        handler(.failure(loadingMovieError.loadError))
+                        handler(.failure(LoadingMovieError.loadError))
                         return
                     }
                     
@@ -51,13 +51,13 @@ struct MoviesLoader: MoviesLoading {
                     handler(.success(mostPopularMovies))
                     
                 } catch {// если не получилось, то передаём дальше ошибку ошибку
-                    handler(.failure(loadingMovieError.loadError))
+                    handler(.failure(LoadingMovieError.loadError))
                 }
             }
         }
     }
     
-    private enum loadingMovieError: Error {
+    private enum LoadingMovieError: Error {
         case loadError
     }
 }
