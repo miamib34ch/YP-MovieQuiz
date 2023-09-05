@@ -39,9 +39,9 @@
    <img width="1438" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/d014997b-ab45-4f0a-85fb-95b130b1c9ca">  
 2. Распакуйте архив и запустите проект:  
    2.1 Зайдите в распакованную папку:  
-   <img width="914" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/3e1c54d0-27c0-4cee-82da-fbec4321733d">  
+   <img width="704" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/adb3740f-ed12-42a1-8665-0d32f10923d5">  
    2.2 Откройте файл *MovieQuiz.xcodeproj*:  
-   <img width="914" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/db97b795-38c9-491b-be49-d878a12fa46f">  
+   <img width="704" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/4617dc54-0821-4ee3-8a0b-5450d729a719">  
    2.3 Появится окно, в котором нужно нажать *Trust and Open*:  
    <img width="255" alt="image" src="https://github.com/miamib34ch/YP-MovieQuiz/assets/77894393/c1682ba9-a047-46be-ba18-a851a0767dd0">  
 3. В Xcode запустите приложение на симуляторе или на реальном устройстве.
